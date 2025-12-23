@@ -87,8 +87,10 @@ def get_config_dir():
 def get_resource_dir():
     """Возвращает корневую директорию скрипта или EXE-файла для ресурсов (шаблона)."""
     if getattr(sys, 'frozen', False):
-        # Если запущено как EXE (PyInstaller)
-        return os.path.dirname(sys.executable)
+        # Если запущено как EXE (PyInstaller onefile),
+        # sys._MEIPASS - это путь к временной папке, где PyInstaller извлекает ресурсы
+        # ЭТО ИСПРАВЛЕНИЕ: Используем sys._MEIPASS
+        return sys._MEIPASS 
     else:
         # Если запущено как Python-скрипт
         return os.path.dirname(os.path.abspath(__file__))
@@ -523,4 +525,5 @@ def configure():
 if __name__ == "__main__":
     configure()
     threading.Thread(target=key_listener, daemon=True).start()
+
     OverlayGUI()
